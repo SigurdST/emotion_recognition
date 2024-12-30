@@ -1,7 +1,7 @@
 # Emotion Recognition from Speech using Mel Spectrograms and CNNs
 
 ## Table of Contents
-1. [Project Presentation](#Project-Presentation)
+1. [Project Presentation](#project-presentation)
 2. [Data Preparation](#data-preparation)
    - [Data Exploration](#data-exploration)
    - [Data Processing](#data-processing)
@@ -14,7 +14,7 @@
 
 ---
 
-## 1 - Project Presentation
+## Project Presentation
 
 This project focuses on developing an emotion recognition system from speech using Mel Spectrograms and Convolutional Neural Networks (CNNs). The dataset used is the [Acted Emotional Speech Dynamic Database (AESDD)](https://dagshub.com/kingabzpro/Acted-Emotional-Speech-Dynamic-Database), which is publicly available on DagsHub.
 
@@ -25,11 +25,11 @@ Various optimization techniques will be applied to enhance the performance of th
 ---
 ---
 
-## 2 - Data Preparation
+## Data Preparation
 
 ---
 
-### 2.A - Data Exploration
+### Data Exploration
 
 The AESDD consists of 605 audio files, categorized into five emotions: angry, disgust, fear, happy, and sad.
 
@@ -49,7 +49,7 @@ Next, I compared the waveforms of one audio file from each emotion, but it was c
 
 ---
 
-### Data processing
+### Data Processing
 
 
 
