@@ -63,12 +63,14 @@ A Mel Spectrogram is a time-frequency representation of audio where the frequenc
 
 2. *Power Spectrogram*:
    The magnitude of the STFT is squared to calculate the power spectrum:
+
    $$
    P(f, t) = |X(f, t)|^2
    $$
 
 3. *Mapping to Mel Scale*:
    Frequencies are converted to the Mel scale using a triangular filter bank. The Mel scale is defined as:
+
    $$
    m(f) = 2595 \cdot \log_{10}\left(1 + \frac{f}{700}\right)
    $$
@@ -76,13 +78,17 @@ A Mel Spectrogram is a time-frequency representation of audio where the frequenc
 
 4. *Mel Filter Bank Application*:
    The power spectrogram is multiplied by the Mel filter bank to map the linear frequency scale to the Mel scale:
+
    $$
    M(m, t) = \sum_{f} P(f, t) \cdot H_m(f)
    $$
+
    where $H_m(f)$ represents the filter weights for the $m$-th Mel filter.
 
 5. *Logarithmic Compression*:
    To mimic the human perception of sound intensity, a logarithmic transformation is applied:
+
    $$
    \text{Mel Spectrogram}(m, t) = \log\left
+   $$
 
