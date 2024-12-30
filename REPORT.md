@@ -1,7 +1,7 @@
 # Emotion Recognition from Speech using Mel Spectrograms and CNNs
 
 ## Table of Contents
-1. [Project Presentation](#project-presentation)
+1. [Project Presentation](#Project-Presentation)
 2. [Data Preparation](#data-preparation)
    - [Data Exploration](#data-exploration)
    - [Data Processing](#data-processing)
