@@ -56,9 +56,7 @@ A Mel Spectrogram is a time-frequency representation of audio where the frequenc
 
 1. *Short-Time Fourier Transform (STFT)*:
    The audio signal $x(t)$ is divided into overlapping frames, and the Fourier Transform is applied to each frame to obtain the frequency spectrum:
-   $$
-   X(f, t) = \text{STFT}(x(t))
-   $$
+   $$ X(f, t) = \text{STFT}(x(t))$$
    where $X(f, t)$ represents the frequency components at a specific time.
 
 2. *Power Spectrogram*:
