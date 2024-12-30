@@ -28,7 +28,7 @@ Various optimization techniques will be applied to enhance the performance of th
 
 ### Data Exploration
 
-The AESDD consists of 605 audio files, categorized into five emotions: angry, disgust, fear, happy, and sad.
+The AESDD consists of 605 audio files, categorized into five emotions: angry, disgust, fear, happy, and sad. All the files have a sampling rate of 44100 Hz.
 
 I began by importing the audio files and used the `librosa` package to analyze their characteristics and visualize their waveforms.
 
@@ -54,27 +54,42 @@ To process our data, we first apply noise reduction using the `noisereduce` pack
 
 A Mel Spectrogram is a time-frequency representation of audio where the frequency axis is scaled according to the **Mel scale**, which approximates human auditory perception. Here's a breakdown of how it works mathematically:
 
-1. *Short-Time Fourier Transform (STFT)*:
+1. *Short-Time Fourier Transform (STFT)*:  
+
    The audio signal $x(t)$ is divided into overlapping frames, and the Fourier Transform is applied to each frame to obtain the frequency spectrum:
-   $$ X(f, t) = \text{STFT}(x(t))$$
-   where $X(f, t)$ represents the frequency components at a specific time.
 
-2. *Power Spectrogram*:
-   The magnitude of the STFT is squared to calculate the power spectrum:
+$$
+X(f, t) = \int_{-\infty}^{\infty} x(\tau) \cdot w(\tau - t) \cdot e^{-j 2 \pi f \tau} \, d\tau
+$$
 
-   $$
-   P(f, t) = |X(f, t)|^2
-   $$
+where:
+- $x(\tau)$: the input signal as a function of time.
+- $w(\tau - t)$: the window function centered around $t$, used to select a segment of the signal.
+- $f$: the frequency at which the transform is computed.
+- $e^{-j 2 \pi f \tau}$: the Fourier kernel, representing a complex sinusoid.
 
-3. *Mapping to Mel Scale*:
-   Frequencies are converted to the Mel scale using a triangular filter bank. The Mel scale is defined as:
+   The Fourier Transform is used to analyze the frequency content of a signal by converting it from the time domain to the frequency domain. This helps in understanding, processing, and filtering signals based on their frequency characteristics.
 
+
+2. *Power Spectrogram*:  
+
+   The magnitude of the STFT is squared to calculate the power spectrum:  
+$$P(f, t) = |X(f, t)|^2$$  
+
+   The power spectrum represents the distribution of power into frequency components of the signal over time. It helps identify which frequencies dominate the signal's energy at specific moments, making it essential in audio analysis, speech processing, and other signal processing tasks.
+
+3. *Mapping to Mel Scale*:  
+
+   Frequencies are converted to the Mel scale using a triangular filter bank. The Mel scale is defined as:  
    $$
    m(f) = 2595 \cdot \log_{10}\left(1 + \frac{f}{700}\right)
-   $$
-   Each filter in the bank sums the power within its frequency range, effectively smoothing the spectrum.
+   $$  
+   Each filter in the bank sums the power within its frequency range, effectively smoothing the spectrum.  
+
+   The Mel scale approximates how humans perceive pitch, as it is designed to be more sensitive to lower frequencies and less sensitive to higher frequencies. This makes it useful for audio analysis tasks such as speech recognition and music processing.
 
 4. *Mel Filter Bank Application*:
+
    The power spectrogram is multiplied by the Mel filter bank to map the linear frequency scale to the Mel scale:
 
    $$
@@ -83,10 +98,28 @@ A Mel Spectrogram is a time-frequency representation of audio where the frequenc
 
    where $H_m(f)$ represents the filter weights for the $m$-th Mel filter.
 
-5. *Logarithmic Compression*:
-   To mimic the human perception of sound intensity, a logarithmic transformation is applied:
+5. *Logarithmic Compression*: 
 
+   To mimic the human perception of sound intensity, a logarithmic transformation is applied:  
    $$
    \text{Mel Spectrogram}(m, t) = \log\left(M(m, t) + \epsilon\right)
-   $$
-   where $\epsilon$ is a small value to avoid logarithm of zero.
+   $$  
+   where $\epsilon$ is a small value to avoid the logarithm of zero.  
+
+   The logarithmic transformation mimics the human perception of sound intensity because our hearing is more sensitive to relative changes in quiet sounds than in loud ones. This non-linear scaling reflects how humans perceive differences in sound levels, making it suitable for tasks like speech recognition and audio analysis.
+
+**Application**
+
+To apply the Mel Spectrogram transformation to our data, we use the following functions from the `librosa` package:
+- `feature.melspectrogram`: Computes the Mel Spectrogram.
+- `power_to_db`: Performs logarithmic compression to mimic human sound perception.
+
+PRECISEZ LES HP
+
+Additionally, we use the `matplotlib` library to visualize the spectrogram as an image. Below is the spectrogram of the first audio file:
+
+![Spectrogram](plots/spec.png)
+
+This visualization shows how the energy of different frequency bands varies over time, providing valuable insights for audio analysis and machine learning tasks.
+
+
