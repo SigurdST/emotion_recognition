@@ -87,6 +87,6 @@ A Mel Spectrogram is a time-frequency representation of audio where the frequenc
    To mimic the human perception of sound intensity, a logarithmic transformation is applied:
 
    $$
-   \text{Mel Spectrogram}(m, t) = \log\left
+   \text{Mel Spectrogram}(m, t) = \log\left(M(m, t) + \epsilon\right)
    $$
-
+   where $\epsilon$ is a small value to avoid logarithm of zero.
