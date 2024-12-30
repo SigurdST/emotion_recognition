@@ -55,36 +55,34 @@ To process our data, we first apply noise reduction using the `noisereduce` pack
 A Mel Spectrogram is a time-frequency representation of audio where the frequency axis is scaled according to the **Mel scale**, which approximates human auditory perception. Here's a breakdown of how it works mathematically:
 
 1. *Short-Time Fourier Transform (STFT)*:
-   The audio signal \( x(t) \) is divided into overlapping frames, and the Fourier Transform is applied to each frame to obtain the frequency spectrum:
-   \[
+   The audio signal $x(t)$ is divided into overlapping frames, and the Fourier Transform is applied to each frame to obtain the frequency spectrum:
+   $$
    X(f, t) = \text{STFT}(x(t))
-   \]
-   where \( X(f, t) \) represents the frequency components at a specific time.
+   $$
+   where $X(f, t)$ represents the frequency components at a specific time.
 
 2. *Power Spectrogram*:
    The magnitude of the STFT is squared to calculate the power spectrum:
-   \[
+   $$
    P(f, t) = |X(f, t)|^2
-   \]
+   $$
 
 3. *Mapping to Mel Scale*:
    Frequencies are converted to the Mel scale using a triangular filter bank. The Mel scale is defined as:
-   \[
+   $$
    m(f) = 2595 \cdot \log_{10}\left(1 + \frac{f}{700}\right)
-   \]
+   $$
    Each filter in the bank sums the power within its frequency range, effectively smoothing the spectrum.
 
 4. *Mel Filter Bank Application*:
    The power spectrogram is multiplied by the Mel filter bank to map the linear frequency scale to the Mel scale:
-   \[
+   $$
    M(m, t) = \sum_{f} P(f, t) \cdot H_m(f)
-   \]
-   where \( H_m(f) \) represents the filter weights for the \( m \)-th Mel filter.
+   $$
+   where $H_m(f)$ represents the filter weights for the $m$-th Mel filter.
 
 5. *Logarithmic Compression*:
    To mimic the human perception of sound intensity, a logarithmic transformation is applied:
-   \[
-   \text{Mel Spectrogram}(m, t) = \log\left(M(m, t) + \epsilon\right)
-   \]
-   where \( \epsilon \) is a small value to avoid logarithm of zero.
+   $$
+   \text{Mel Spectrogram}(m, t) = \log\left
 
