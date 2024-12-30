@@ -74,6 +74,7 @@ where:
 2. *Power Spectrogram*:  
 
    The magnitude of the STFT is squared to calculate the power spectrum:  
+
 $$P(f, t) = |X(f, t)|^2$$  
 
    The power spectrum represents the distribution of power into frequency components of the signal over time. It helps identify which frequencies dominate the signal's energy at specific moments, making it essential in audio analysis, speech processing, and other signal processing tasks.
@@ -81,9 +82,9 @@ $$P(f, t) = |X(f, t)|^2$$
 3. *Mapping to Mel Scale*:  
 
    Frequencies are converted to the Mel scale using a triangular filter bank. The Mel scale is defined as:  
-   $$
-   m(f) = 2595 \cdot \log_{10}\left(1 + \frac{f}{700}\right)
-   $$  
+
+$$m(f) = 2595 \cdot \log_{10}\left(1 + \frac{f}{700}\right)$$
+
    Each filter in the bank sums the power within its frequency range, effectively smoothing the spectrum.  
 
    The Mel scale approximates how humans perceive pitch, as it is designed to be more sensitive to lower frequencies and less sensitive to higher frequencies. This makes it useful for audio analysis tasks such as speech recognition and music processing.
@@ -92,18 +93,16 @@ $$P(f, t) = |X(f, t)|^2$$
 
    The power spectrogram is multiplied by the Mel filter bank to map the linear frequency scale to the Mel scale:
 
-   $$
-   M(m, t) = \sum_{f} P(f, t) \cdot H_m(f)
-   $$
+$$M(m, t) = \sum_{f} P(f, t) \cdot H_m(f)$$
 
    where $H_m(f)$ represents the filter weights for the $m$-th Mel filter.
 
 5. *Logarithmic Compression*: 
 
    To mimic the human perception of sound intensity, a logarithmic transformation is applied:  
-   $$
-   \text{Mel Spectrogram}(m, t) = \log\left(M(m, t) + \epsilon\right)
-   $$  
+
+$$\text{Mel Spectrogram}(m, t) = \log\left(M(m, t) + \epsilon\right)$$
+
    where $\epsilon$ is a small value to avoid the logarithm of zero.  
 
    The logarithmic transformation mimics the human perception of sound intensity because our hearing is more sensitive to relative changes in quiet sounds than in loud ones. This non-linear scaling reflects how humans perceive differences in sound levels, making it suitable for tasks like speech recognition and audio analysis.
