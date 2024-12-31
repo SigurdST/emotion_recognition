@@ -17,7 +17,7 @@
 
 # Project Presentation
 
-This project_focuses on developing an emotion recognition system from speech using Mel Spectrograms and Convolutional Neural Networks (CNNs). The dataset used is the [Acted Emotional Speech Dynamic Database (AESDD)](https://dagshub.com/kingabzpro/Acted-Emotional-Speech-Dynamic-Database), which is publicly available on DagsHub.
+This project focuses on developing an emotion recognition system from speech using Mel Spectrograms and Convolutional Neural Networks (CNNs). The dataset used is the [Acted Emotional Speech Dynamic Database (AESDD)](https://dagshub.com/kingabzpro/Acted-Emotional-Speech-Dynamic-Database), which is publicly available on DagsHub.
 
 The workflow begins with an analysis of the dataset, followed by transforming the audio recordings into numerical representations using the Mel Spectrogram technique. These spectrograms serve as input features for CNNs, which will be designed and trained to classify emotions.
 
@@ -118,9 +118,7 @@ To apply the Mel Spectrogram transformation to our data, we use the following fu
 
 In the `feature.melspectrogram` function, I chose the default values for both parameters: `n_mels=128`, which specifies 128 Mel bands for the spectrogram, and `n_fft=2048`, which defines the number of samples used in each Fourier Transform window to control the frequency resolution. The output is a $128*n$ matrices where :
 
-$$
-n = \lceil\frac{\text{sampling rate} \times \text{audio duration}}{\text{n\_fft}} * 4\rceil
-$$
+
 
 Here, $n$ corresponds to the number of time frames in the spectrogram, and each element of the matrix represents the energy of a specific Mel band (row) at a specific time frame (column).
 
