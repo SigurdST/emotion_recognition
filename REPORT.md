@@ -226,22 +226,22 @@ After reshaping the data, I implemented two CNNs, one with 3 layers and the othe
 
 To address the small dataset size (604 audio files transformed into Mel spectrograms), I will artificially augment the data. By applying 4 augmentation methods randomly 10 times to each spectrogram, I aim to increase the dataset size by a factor of 10. The augmentation methods are as follows:
 
-#### **Add Random Noise**
+#### ***Add Random Noise***
 
 Random noise is added to the spectrogram using a Gaussian distribution with a variance of $0.01$.
 
 
-#### **Pitch Shift**
+#### ***Pitch Shift***
 
 The pitch of the audio is shifted by a random integer between $-4$ and $4$ of semitones within a specified range. This method alters the perceived pitch while preserving other characteristics, simulating variations in vocal or instrumental tones.
 
 
-#### **Frequency Mask**
+#### ***Frequency Mask***
 
 A random frequency range in the spectrogram is masked (set to zero). This simulates scenarios where certain frequency bands are missing or obscured, helping the model become robust to incomplete data.
 
 
-#### **Time Mask**
+#### ***Time Mask***
 
 A random time range in the spectrogram is masked. This technique mimics interruptions or short silences in the audio, forcing the model to learn from incomplete temporal patterns.
 
@@ -252,9 +252,9 @@ I trained my augmented dataset on two 4-layer CNNs: one using a batch size of 1,
 
 ### Results
 
-#### Batch size of 1
+#### ***Batch size of 1***
 
-#### Resized spectrograms
+#### ***Resized spectrograms***
 
 ## Conclusion
 
