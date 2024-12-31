@@ -116,7 +116,7 @@ To apply the Mel Spectrogram transformation to our data, we use the following fu
 - `feature.melspectrogram`: Computes the Mel Spectrogram.
 - `power_to_db`: Performs logarithmic compression to mimic human sound perception.
 
-In the `feature.melspectrogram` function, I chose the default values for both parameters: `n_mels=128`, which specifies 128 Mel bands for the spectrogram, and `n_fft=2048`, which defines the number of samples used in each Fourier Transform window to control the frequency resolution. The output is a $128*n$ matrices where :
+In the `feature.melspectrogram` function, I chose the default values for both parameters: `nmels=128`, which specifies 128 Mel bands for the spectrogram, and `nfft=2048`, which defines the number of samples used in each Fourier Transform window to control the frequency resolution. The output is a $128*n$ matrices where :
 
 $$
 n = \lceil\frac{\text{sampling rate} \times \text{audio duration}}{\text{n\_fft}} * 4\rceil
