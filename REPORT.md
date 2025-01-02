@@ -10,7 +10,9 @@
    - [CNNs with Batch Size of 1](#cnns-with-batch-size-of-1)
    - [CNNs with Resized Spectrograms](#cnns-with-resized-spectrograms)
    - [CNNs on Artificial Data](#cnns-on-artificial-data)
-4. [Conclusions](#conclusions)
+4. [Conclusion and Notes](#conclusions)
+   - [Conclusion](#conclusion)
+   - [Notes](#notes)
 
 ---
 
@@ -115,7 +117,7 @@ To apply the Mel Spectrogram transformation to our data, we use the following fu
 - `feature.melspectrogram`: Computes the Mel Spectrogram.
 - `power_to_db`: Performs logarithmic compression to mimic human sound perception.
 
-In the `feature.melspectrogram` function, I chose the default values for both parameters: `n_mels=128`, which specifies 128 Mel bands for the spectrogram, and `n_fft=2048`, which defines the number of samples used in each Fourier Transform window to control the frequency resolution. The output is a $128*n$ matrices where :
+In the `feature.melspectrogram` function, I chose the default values for both parameters: `n_mels=128`, which specifies 128 Mel bands for the spectrogram, and `n_fft=2048`, which defines the number of samples used in each Fourier Transform window to control the frequency resolution. The output is a $128 \times n$ matrices where :
 
 $$
 n = \lceil\frac{\text{sampling rate} \times \text{audio duration}}{\text{nfft}} \times 4\rceil
@@ -190,10 +192,44 @@ I implemented two CNNs: one with 3 layers and another with 4 layers. I applied a
 
 ### Results
 
-#### ***3 Layers***
+I chose accuracy as the sole evaluation metric because the dataset is perfectly balanced across the five emotions, making accuracy a reliable measure of model performance without the need for additional metrics.
 
-#### ***4 Layers***
+### ***3 Layers***
 
+First, I implemented a CNN with 3 layers, and test it with learning rate equal to 0.01, 0.001 and 0.0001.
+
+#### Learning rate = 0.01
+
+As shown in the plot, the loss does not converge, indicating that the learning rate is too high. The excessive learning rate causes the loss to oscillate, preventing the model from stabilizing and learning effectively. I therefore stopped the training after 50 epochs.
+
+![3laybs1_1](plots/3laybs1_1.png)
+
+#### Learning rate = 0.001
+
+In this case, the loss converges well. I trained the model for 300 epochs, and while the training loss continued to decrease, the test loss began to diverge after approximately 100 epochs. The minimum test loss was reached around this point, but the best accuracy was achieved at epoch 236, with a value of **74.38%**. The best model can be selected based on either the highest accuracy or the smallest test loss, depending on the desired evaluation criteria.
+
+![3laybs1_2](plots/3laybs1_2.png)
+
+#### Learning rate = 0.0001
+
+### ***4 Layers***
+
+
+Second, I implemented a CNN with 4 layers, and test it with learning rate equal to 0.001 and 0.0001.
+
+#### Learning rate = 0.001
+
+With a learning rate of 0.001, the test loss stabilizes after 20 epochs and begins to diverge after 60 epochs. The best accuracy is achieved at epoch 88, with a value of **71.90%**.
+
+![4laybs1_1](plots/4laybs1_1.png)
+
+#### Learning rate = 0.0001
+
+Here, the test loss reaches its minimum at approximately 100 epochs, while the best accuracy is achieved at epoch 224, with a value of **67.77%**.
+
+![4laybs1_2](plots/4laybs1_2.png)
+
+With a batch size of 1, the CNN's loss converges slowly. However, it achieves excellent accuracy, particularly with the 3-layer model and a learning rate of 0.001, where the accuracy exceeds **74%** on the test set.
 
 ## CNNs with Resized Data
 
@@ -210,15 +246,48 @@ Interpolation resizes the spectrograms by scaling them up or down to a target si
 
 I chose a target spectrogram dimension of $128 \times 256$, as the majority of spectrograms have more than 256 time frames. This ensures that minimal padding is required while retaining a sufficiently large dimension to preserve as much information as possible for spectrograms with the most time frames. Spectrograms with $n < 256$ will be padded, while those with $n > 256$ will be resized using interpolation.
 
-ADD THE PLOT OF n REPARTION
+![dist_n](plots/dist_n.png)
 
 After reshaping the data, I implemented two CNNs, one with 3 layers and the other with 4 layers, using 25% dropout, and max pooling for dimensionality reduction and feature extraction.
 
 ### Results
 
-#### ***3 Layers***
+Now that the data has been reshaped to have uniform dimensions, I can select a batch size larger than 1 for the data loader. I chose a batch size of 8.
 
-#### ***4 Layers***
+### ***3 Layers***
+
+First, I implemented a CNN with 3 layers, and test it with learning rate equal to 0.001 and 0.0001.
+
+#### Learning rate = 0.001
+
+The model train loss converges really fast, due to the batch size which is no longer equal to 1 but to 8. For the test loss, it starts to diverges after only 4 epochs, where the best accuracy is attained, equal to **55.37%**, which is pretty low. 
+
+![3layres_1](plots/3layres_1.png)
+
+#### Learning rate = 0.0001
+
+Once again, the  train loss converges really fast. The test loss starts slowly to diverges after only 3 epoch. The best test accuracy is reached after 30 epochs, with a value of **53.72%%**.
+
+![3layres_2](plots/3layres_2.png)
+
+### ***4 Layers***
+
+Second, I implemented a CNN with 4 layers, and test it with learning rate equal to 0.001 and 0.0001.
+
+#### Learning rate = 0.001
+
+It still converging fast, the test loss starts diverging after 5 epochs. The best accuracy on the test set is **61.98%**, attained after 18 epochs.
+
+![4layres_1](plots/4layres_1.png)
+
+#### Learning rate = 0.0001
+
+Here, the model converges slightly slower. The test loss stabilizes after approximately 10 epochs and does not significantly diverge. The best accuracy is achieved at epoch 32, with a value of **62.81%**.
+
+![4layres_2](plots/4layres_2.png)
+
+With resized data, we have models that are fast to optimize, wiht losses that converge fast, but the accuracy obtained on the test set is way lower than the model using a loader with a batch size of 1, in particular for the 3 layers models. This means that we loss lot of information while reshaping, even using interpolation method. We still have a correct accuracy of close to **63%** for the 4 layers CNN with a learning rate of 0.0001.
+
 
 ## CNNs on Artificial Data
 
@@ -246,18 +315,104 @@ A random frequency range in the spectrogram is masked (set to zero). This simula
 A random time range in the spectrogram is masked. This technique mimics interruptions or short silences in the audio, forcing the model to learn from incomplete temporal patterns.
 
 
-By combining these techniques, I aim to create a diverse and enriched dataset that enhances the model's ability to generalize and perform well on unseen data. Each technique will be applied with a $60\%$ probability, ensuring a balanced and varied augmentation process.
+By combining these techniques, I aim to create a diverse and enriched dataset that enhances the model's ability to generalize and perform well on unseen data. Each technique will be applied with a $60$% probability, ensuring a balanced and varied augmentation process.
 
 I trained my augmented dataset on two 4-layer CNNs: one using a batch size of 1, and the other using resized spectrograms.
 
 ### Results
 
-#### ***Batch size of 1***
+As I now have a dataset that is 10 times larger, I will exclusively use 4-layer CNNs because the increased dataset size allows the model to leverage the additional complexity of deeper networks effectively.
 
-#### ***Resized spectrograms***
+### ***Batch size of 1***
+
+#### Learning rate = 0.001
+
+The computations are slower for each epoch due to the increased dataset size, but the training loss converges relatively quickly. The test loss begins to diverge after approximately 5 epochs, with the best accuracy achieved at epoch 18, reaching **66.94%**.
+
+![bs1_aug1](plots/bs1_aug1.png)
+
+#### Learning rate = 0.0001
+
+It logically converges slower, and the test loss starts diverging after about 20 epochs. The best accuracy is equal to **70.25** at epoch 72. 
+
+![bs1_aug2](plots/bs1_aug2.png)
+
+We have pretty good result on the artificial data with batch size of 1 method, in particular with a learning rate of 0.0001 we obtain an accuracy over **70%** on the test set.
+
+### ***Resized spectrograms***
+
+With a larger dataset, I chose to increase the batch size to 16. This increases the computational time for each epoch.
+
+#### Learning rate = 0.001
+
+The test loss starts diverging after only 3 epochs. The best accuracy on the test set is obtained at epoch 17, equal to **62.81%**. 
+
+![res_aug1](plots/res_aug1.png)
+
+#### Learning rate = 0.0001
+
+Once again, the test loss start diverging after only afew epochs. The model have an accuracy of **59.50%** at epoch 28.
+
+![res_aug2](plots/res_aug2.png)
+
+Similar to the original dataset, the resized data produced worse results compared to the original data when using a batch size of 1 in the loader. This confirms that some information is indeed lost during the reshaping process.
+
+We might have expected better results on the artificial dataset compared to the original one, given that it is ten times larger. However, this is not the case, likely because the process of creating the artificial data involved modifying the Mel spectrograms, which may have caused the loss of important information, making it more challenging for the model to distinguish between different emotions.
 
 ---
 
-# Conclusion
+# Conclusion and Notes
 
+## Conclusion
+
+To classify the audio files into the 5 different emotion categories, the first step is to transform them into numerical representations. To achieve this, the audio files are converted into **Mel spectrograms**, a time-frequency representation of sound. The Mel spectrogram captures the energy levels across different frequency bands over time, scaled according to the Mel scale, which approximates human auditory perception. This transformation provides a robust and structured input suitable for training CNNs to classify the emotions effectively.
+
+Then, I implemented and trained the **CNNs**. The main challenge was that the Mel spectrograms had **different shapes**. To address this, I used two techniques: first, I trained models using a data loader with a **batch size of 1**, allowing the models to handle variable-sized inputs. Second, I **resized** the Mel spectrograms using **padding** and **interpolation** to standardize their dimensions.
+
+Another significant issue was the **small size of the dataset** (604 files after data processing). To mitigate this, I created an **artificial dataset 10 times larger** by applying data augmentation techniques. These included **adding noise, pitch shifting, time masking, and frequency masking**, applied randomly to each file 10 times. Care was taken to retain the crucial information necessary to infer emotions. I then trained CNNs using the same two methods: batch size of 1 for variable-sized data and resized spectrograms for standardized inputs.
+
+Here is a summary of the results for all models evaluated during the project:
+
+| Model Type                                   | Learning Rate | Best Accuracy (%) | Best Epoch |
+|---------------------------------------------|---------------|-------------------|------------|
+| 3 Layers (Batch Size 1, Original Data)      | 0.001         | 74.38            | 236        |
+| 4 Layers (Batch Size 1, Original Data)      | 0.001         | 71.90            | 88         |
+| 3 Layers (Resized Data)                     | 0.001         | 55.37            | 4          |
+| 4 Layers (Resized Data)                     | 0.001         | 62.81            | 32         |
+| 4 Layers (Batch Size 1, Artificial Data)    | 0.0001        | 70.25            | 72         |
+| 4 Layers (Resized Data, Artificial Data)    | 0.001         | 62.81            | 17         |
+
+
+We observe that the best results are achieved using the loader with a batch size of 1 on the original data. This is not surprising, as the original data retains all information without any loss caused by resizing or augmentation. However, using a batch size of 1 requires the models to train over many epochs to achieve good results. While each epoch is computed faster due to only one gradient being calculated, the overall training process is longer compared to CNNs trained on resized data with a batch size of 8. However, the latter show significantly worse results, likely due to excessive loss of crucial information required for the model to recognize emotions effectively.
+
+The models trained on the artificial data achieve results similar to those trained on the original dataset. This can be explained by the fact that, although the dataset is significantly larger, the process of creating artificial data may have introduced some loss of crucial information. As observed earlier, the batch size of 1 method yields better results compared to the resized method.
+
+## Notes
+
+### Challenges encountered and lesson learned
+
+This project was a significant challenge for me. It was the first time I worked with audio files, and I had never encountered Mel Spectrograms before. I had to research and understand how they worked. Fortunately, my partial familiarity with the Fourier Transform from undergraduate studies (though I had forgotten some details, I still remembered the broad concepts) helped me grasp the principles of Mel Spectrograms relatively quickly.
+
+Additionally, this was my first project involving the creation of neural networks, making it my introduction to deep learning. While we had implemented neural networks during lectures, this experience was entirely different as I had no guidance and had to build them from scratch. It was a highly enriching process, and I feel I now have a much stronger understanding of how to code neural networks using PyTorch.
+
+Another major challenge was finding a solution to handle data with varying sizes, something we had never tackled in lectures. On top of that, creating artificial spectrograms to augment the dataset added another layer of complexity. Overall, this project pushed me out of my comfort zone and provided invaluable learning experiences in both audio processing and deep learning.
+
+
+### Limitations and Areas for Improvement
+
+While I am generally very satisfied with my project, there are still some areas that could be improved:
+
+1. **Data Analysis**:
+   - My data analysis was not very thorough, as I have no prior experience working with audio files and had limited knowledge of what aspects to analyze. A more in-depth exploration of the data could have provided valuable insights for preprocessing and modeling.
+
+2. **Resized Data**:
+   - The fairly poor results with the resized data indicate that a significant amount of information was lost during the transformation. I believe it would have been possible to minimize this loss by optimizing the resizing process further, potentially exploring more sophisticated interpolation techniques.
+
+3. **Artificial Dataset**:
+   - When creating the artificial dataset, I forgot to check for duplicates. Although the probability of duplicates is very low, ensuring their absence would have added robustness to the data augmentation process.
+
+4. **Model Evaluation**:
+   - I selected the model with the best accuracy on the test set, but it would have been more rigorous to evaluate its performance on a third dataset, such as a validation set, to confirm its generalization ability.
+
+Addressing these issues would likely lead to a more robust and well-optimized system for emotion recognition from speech.
 
