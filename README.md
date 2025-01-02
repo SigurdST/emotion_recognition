@@ -82,17 +82,12 @@ This project focuses on developing an emotion recognition system from speech usi
 2. Resized spectrograms resulted in lower accuracy, likely due to loss of crucial information during resizing.
 3. Artificially augmented data achieved accuracy similar to the original dataset, but with possible information loss during augmentation.
 
-## Repository Contents
-
-- `notebook.ipynb`: Code for data preprocessing, CNN training, and evaluation.
-- `plots/`: Visualizations of spectrograms, loss convergence, and results.
-- `REPORT.md`: In-depth details of the project workflow, methods, challenges, and conclusions.
-
 ## Quick Start
 
 1. Clone the repository:  
    ```bash
    git clone https://github.com/SigurdST/emotion_recognition.git
    cd emotion_recognition
+   ```
 
 2. Explore `notebook.ipynb` to review all the code implementation and processes, and `REPORT.md` for detailed explanations, results, and insights derived from the project.

@@ -129,7 +129,7 @@ After applying both functions, I use the `matplotlib` library to visualize the s
 
 ![Spectrogram](plots/spec.png)
 
-The spectrogram plot provides a visual representation of how the energy of different frequency bands varies over time.
+The spectrogram plot provides a visual representation of how the energy of different frequency bands varies over time. All the Mel spectrograms plots are in the `plot_spectrograms` folder.
 
 Now that I have explored and processed the audio files into numerical values in the form of Mel spectrograms, I am ready to begin the modeling phase using CNNs.
 
@@ -211,6 +211,10 @@ In this case, the loss converges well. I trained the model for 300 epochs, and w
 ![3laybs1_2](plots/3laybs1_2.png)
 
 #### Learning rate = 0.0001
+
+In this case the loss converges way too slowly. I trained the model for 1000 epochs, and the train loss was still not really low, but the test loss is stabilizing after epoch 600. The best accuracy is reached at epoch 706 with a value of **66.12%**.
+
+![3laybs1_3](plots/3laybs1_3.png)
 
 ### ***4 Layers***
 
@@ -315,7 +319,7 @@ A random frequency range in the spectrogram is masked (set to zero). This simula
 A random time range in the spectrogram is masked. This technique mimics interruptions or short silences in the audio, forcing the model to learn from incomplete temporal patterns.
 
 
-By combining these techniques, I aim to create a diverse and enriched dataset that enhances the model's ability to generalize and perform well on unseen data. Each technique will be applied with a $60$% probability, ensuring a balanced and varied augmentation process.
+By combining these techniques, I aim to create a diverse and enriched dataset that enhances the model's ability to generalize and perform well on unseen data. Each technique will be applied with a $60$% probability, ensuring a balanced and varied augmentation process. There is a non-zero probability of having duplicates, but I verified, and none were found.
 
 I trained my augmented dataset on two 4-layer CNNs: one using a batch size of 1, and the other using resized spectrograms.
 
@@ -408,10 +412,7 @@ While I am generally very satisfied with my project, there are still some areas 
 2. **Resized Data**:
    - The fairly poor results with the resized data indicate that a significant amount of information was lost during the transformation. I believe it would have been possible to minimize this loss by optimizing the resizing process further, potentially exploring more sophisticated interpolation techniques.
 
-3. **Artificial Dataset**:
-   - When creating the artificial dataset, I forgot to check for duplicates. Although the probability of duplicates is very low, ensuring their absence would have added robustness to the data augmentation process.
-
-4. **Model Evaluation**:
+3. **Model Evaluation**:
    - I selected the model with the best accuracy on the test set, but it would have been more rigorous to evaluate its performance on a third dataset, such as a validation set, to confirm its generalization ability. I was limited by the size of the dataset.
 
 Addressing these issues would likely lead to a more robust and well-optimized system for emotion recognition from speech.
